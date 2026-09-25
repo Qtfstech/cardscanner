@@ -58,6 +58,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.cardscanner.app.data.Card
+import com.cardscanner.app.data.displayName
 import com.cardscanner.app.ui.CardsViewModel
 import com.cardscanner.app.util.ContactExport
 import com.cardscanner.app.util.ImageStore

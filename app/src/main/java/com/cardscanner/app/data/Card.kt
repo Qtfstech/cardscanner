@@ -17,7 +17,8 @@ data class Card(
     val imagePath: String? = null,
     val rawText: String = "",
     val createdAt: Long = System.currentTimeMillis(),
-) {
-    val displayName: String
-        get() = name.ifBlank { company.ifBlank { emails.firstOrNull() ?: "Unnamed card" } }
-}
+)
+
+/** Kept outside the entity so Room doesn't treat it as a column. */
+val Card.displayName: String
+    get() = name.ifBlank { company.ifBlank { emails.firstOrNull() ?: "Unnamed card" } }

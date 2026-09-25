@@ -10,6 +10,7 @@ import android.provider.ContactsContract
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.cardscanner.app.data.Card
+import com.cardscanner.app.data.displayName
 import java.io.File
 
 object ContactExport {
