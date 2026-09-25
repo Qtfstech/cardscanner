@@ -52,7 +52,7 @@ object ContactExport {
     }
 
     fun toVCard(card: Card): String = buildString {
-        fun esc(s: String) = s.replace("\\", "\\\\").replace(",", "\\,").replace(";", "\;").replace("\n", "\\n")
+        fun esc(s: String) = s.replace("\\", "\\\\").replace(",", "\\,").replace(";", "\\;").replace("\n", "\\n")
         appendLine("BEGIN:VCARD")
         appendLine("VERSION:3.0")
         val parts = card.name.trim().split(' ')
