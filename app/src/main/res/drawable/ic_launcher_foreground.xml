@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Business card -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,38h48a4,4 0,0 1,4 4v24a4,4 0,0 1,-4 4h-48a4,4 0,0 1,-4 -4v-24a4,4 0,0 1,4 -4z" />
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M34,46h14v14h-14z" />
+    <path
+        android:fillColor="#90CAF9"
+        android:pathData="M52,47h22v3h-22zM52,53h18v3h-18zM52,59h14v3h-14z" />
+    <!-- Scan corners -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3"
+        android:pathData="M22,40v-10h10M76,30h10v10M86,68v10h-10M32,78h-10v-10" />
+</vector>
