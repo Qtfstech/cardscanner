@@ -6,13 +6,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
       - uses: gradle/actions/setup-gradle@v4
-      - run: ./gradlew testDebugUnitTest assembleDebug
+      - name: Build
+        run: |
+          set -o pipefail
+          ./gradlew testDebugUnitTest assembleDebug 2>&1 | tee build.log
+      - name: Show build errors
+        if: failure()
+        run: |
+          # Surface compiler and Gradle errors as annotations on the run summary.
+          grep -E "^e: |What went wrong|^> |FAILED|error:" -A3 build.log | head -60 > errors.txt || true
+          python3 - <<'PY'
+          text = open("errors.txt").read()[:6000] or "No error lines found"
+          print("::error title=Build failed::" + text.replace("%", "%25").replace("\r", "").replace("\n", "%0A"))
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: card-scanner-debug-apk
