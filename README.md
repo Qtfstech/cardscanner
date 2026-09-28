@@ -6,15 +6,20 @@ and keeps a searchable list of every card you've scanned.
 
 ## Features
 
-- **Scan** with the camera (card-shaped guide frame, flash toggle) or **import** a photo from the gallery.
+- **Projects**: group cards by event or batch. Start a new project any time, rename it, or delete it
+  (with its cards and photos). Cards you scanned before projects existed are kept in "My cards".
+- **Upload many photos at once** into a project from the gallery; each is read and saved as a card.
+- **Export to Excel**: each project exports as a real .xlsx workbook with Company as the first column,
+  then Name, Job title, Phone, Email, Website, Address and Notes.
+- **Scan** with the camera (card-shaped guide frame, flash toggle).
 - **On-device text recognition** with Google ML Kit; card photos never leave the phone.
 - **Smart field detection**: name, job title, company, several phones and emails, website and address.
   Fax numbers are skipped; the company falls back to the email domain when it isn't printed.
-- **Review and edit** every field before saving; "Read text again" re-runs recognition.
-- **Saved cards** list with search across name, company, email and phone digits.
+- **Review and edit** every field before saving, company first; "Read text again" re-runs recognition.
+- **Card list** per project, company first, with search across company, name, email and phone digits.
 - **Card details** with one-tap call, email, website and map.
 - **Save to phone contacts** (opens your Contacts app pre-filled, so no contacts permission is needed).
-- **Share** a single card as a vCard, or **export all** cards as vCard or CSV (opens in Excel/Sheets).
+- **Share** a single card or a whole project as a vCard.
 
 ## Build and run
 
@@ -38,7 +43,9 @@ app/src/main/java/com/cardscanner/app/
   ocr/TextRecognizer.kt    ML Kit on-device text recognition
   ui/list, scan, edit, detail   Jetpack Compose screens
   ui/CardsViewModel.kt     View models
-  util/ContactExport.kt    Contacts intent, vCard / CSV export, call / email / map actions
+  ui/projects              Project list and new / rename / delete dialogs
+  util/ContactExport.kt    Contacts intent, vCard and Excel export, call / email / map actions
+  util/ExcelWriter.kt      Minimal .xlsx writer (unit tested)
 ```
 
 ## Tech

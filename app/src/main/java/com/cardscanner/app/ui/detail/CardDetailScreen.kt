@@ -17,7 +17,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Notes
-import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
@@ -53,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.cardscanner.app.data.displayName
+import com.cardscanner.app.data.headline
 import com.cardscanner.app.ui.CardDetailViewModel
 import com.cardscanner.app.util.ContactExport
 import java.io.File
@@ -69,7 +68,7 @@ fun CardDetailScreen(cardId: Long, onBack: () -> Unit, onEdit: (Long) -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(card?.displayName.orEmpty()) },
+                title = { Text(card?.headline.orEmpty()) },
                 navigationIcon = {
                     IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") }
                 },
@@ -99,8 +98,14 @@ fun CardDetailScreen(cardId: Long, onBack: () -> Unit, onEdit: (Long) -> Unit) {
                 )
                 Spacer(Modifier.padding(4.dp))
             }
-            Text(c.displayName, style = MaterialTheme.typography.headlineSmall)
-            if (c.jobTitle.isNotBlank()) Text(c.jobTitle, style = MaterialTheme.typography.titleMedium)
+            // Company first, then the person.
+            Text(c.headline, style = MaterialTheme.typography.headlineSmall)
+            if (c.company.isNotBlank() && c.name.isNotBlank()) {
+                Text(c.name, style = MaterialTheme.typography.titleMedium)
+            }
+            if (c.jobTitle.isNotBlank()) {
+                Text(c.jobTitle, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
 
             Row(Modifier.fillMaxWidth().padding(vertical = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { ContactExport.addToContacts(context, c) }, modifier = Modifier.weight(1f)) {
@@ -118,7 +123,6 @@ fun CardDetailScreen(cardId: Long, onBack: () -> Unit, onEdit: (Long) -> Unit) {
             }
             HorizontalDivider()
 
-            if (c.company.isNotBlank()) InfoRow(Icons.Default.Business, c.company)
             c.phones.forEach { p -> InfoRow(Icons.Default.Phone, p) { ContactExport.dial(context, p) } }
             c.emails.forEach { e -> InfoRow(Icons.Default.Email, e) { ContactExport.email(context, e) } }
             if (c.website.isNotBlank()) InfoRow(Icons.Default.Language, c.website) { ContactExport.openWebsite(context, c.website) }

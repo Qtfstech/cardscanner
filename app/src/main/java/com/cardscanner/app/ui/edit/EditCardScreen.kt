@@ -52,12 +52,13 @@ import java.io.File
 fun EditCardScreen(
     imagePath: String?,
     cardId: Long,
+    projectId: Long,
     onBack: () -> Unit,
     onSaved: (Long) -> Unit,
 ) {
     val context = LocalContext.current
     val vm: EditCardViewModel = viewModel {
-        EditCardViewModel(context.applicationContext as Application, imagePath, cardId)
+        EditCardViewModel(context.applicationContext as Application, imagePath, cardId, projectId)
     }
     val state by vm.state.collectAsStateWithLifecycle()
     val card = state.card
@@ -114,9 +115,9 @@ fun EditCardScreen(
                 return@Column
             }
 
+            Field("Company", card.company) { v -> vm.edit { it.copy(company = v) } }
             Field("Name", card.name) { v -> vm.edit { it.copy(name = v) } }
             Field("Job title", card.jobTitle) { v -> vm.edit { it.copy(jobTitle = v) } }
-            Field("Company", card.company) { v -> vm.edit { it.copy(company = v) } }
             ListField("Phone", card.phones, KeyboardType.Phone) { v -> vm.edit { it.copy(phones = v) } }
             ListField("Email", card.emails, KeyboardType.Email) { v -> vm.edit { it.copy(emails = v) } }
             Field("Website", card.website, KeyboardType.Uri) { v -> vm.edit { it.copy(website = v) } }

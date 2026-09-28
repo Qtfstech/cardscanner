@@ -70,28 +70,36 @@ object ContactExport {
         appendLine("END:VCARD")
     }
 
-    fun toCsv(cards: List<Card>): String = buildString {
-        fun q(s: String) = "\"" + s.replace("\"", "\"\"") + "\""
-        appendLine(listOf("Name", "Title", "Company", "Phones", "Emails", "Website", "Address", "Notes").joinToString(","))
-        cards.forEach { c ->
-            appendLine(
-                listOf(c.name, c.jobTitle, c.company, c.phones.joinToString("; "), c.emails.joinToString("; "),
-                    c.website, c.address, c.notes).joinToString(",") { q(it) }
-            )
-        }
-    }
+    /** Spreadsheet columns, company first. Multiple phones or emails share a cell, one per line. */
+    val EXCEL_HEADER = listOf("Company", "Name", "Job title", "Phone", "Email", "Website", "Address", "Notes")
+
+    fun excelRow(c: Card): List<String> = listOf(
+        c.company, c.name, c.jobTitle, c.phones.joinToString("\n"), c.emails.joinToString("\n"),
+        c.website, c.address, c.notes,
+    )
 
     fun shareVCard(context: Context, cards: List<Card>) {
         val name = if (cards.size == 1) safeFileName(cards[0].displayName) else "cards"
         shareFile(context, "$name.vcf", cards.joinToString("") { toVCard(it) }, "text/x-vcard")
     }
 
-    fun shareCsv(context: Context, cards: List<Card>) =
-        shareFile(context, "cards.csv", toCsv(cards), "text/csv")
+    /** Shares the cards as an Excel workbook named after [projectName]. */
+    fun shareExcel(context: Context, cards: List<Card>, projectName: String) {
+        val file = exportFile(context, "${safeFileName(projectName)}.xlsx")
+        file.outputStream().use { ExcelWriter.write(projectName, EXCEL_HEADER, cards.map(::excelRow), it) }
+        share(context, file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    }
 
-    private fun shareFile(context: Context, fileName: String, content: String, mime: String) {
+    private fun exportFile(context: Context, fileName: String): File {
         val dir = File(context.cacheDir, "exports").apply { mkdirs() }
-        val file = File(dir, fileName).apply { writeText(content) }
+        return File(dir, fileName)
+    }
+
+    private fun shareFile(context: Context, fileName: String, content: String, mime: String) =
+        share(context, exportFile(context, fileName).apply { writeText(content) }, mime)
+
+    private fun share(context: Context, file: File, mime: String) {
+        val fileName = file.name
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
         val send = Intent(Intent.ACTION_SEND).apply {
             type = mime
